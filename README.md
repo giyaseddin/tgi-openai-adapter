@@ -69,7 +69,7 @@ following the [docs of OpenAI](https://platform.openai.com/docs/api-reference/ch
 
 Here's an example of a generation request:
 
-```json lines
+```json
 
 data: {"choices": [{"delta": {"content": " come"}, "finish_reason": null, "index": 0}], "created": 1695169455, "id": "5b67aed3-2980-4332-9677-7397b60d3b5f", "model": "meta-llama/Llama-2-70b-hf", "object": "chat.completion.chunk"}
 
