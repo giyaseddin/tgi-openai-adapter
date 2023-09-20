@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  tgi-openai-adapter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - tgi
+    env_file:
+      - .env  # Specify the path to your .env file
+
+  tgi:
+    image: ghcr.io/huggingface/text-generation-inference:1.0.0
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${token}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - PIP_NO_CACHE_DIR=1
+    # values of the variables in the command might vary
+    command: --model-id ${model} --num-shard 1 --max-input-length 3000 --max-total-tokens 4096
+    runtime: nvidia
+    volumes:
+      - ${VOLUME}:/data
+    devices:
+      - /dev/nvidia0  # If you have GPU(s), adjust this according to your setup
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
