@@ -42,8 +42,31 @@ Let's make it possible to use [text-generation-inference](https://github.com/hug
    ```bash
    uvicorn main:app --reload
    ```
+   
+2. With Docker
 
-2. Make POST requests to the `/v1/chat/completions` endpoint to generate text. You can use the following JSON format for your requests:
+   ```bash
+   cp .env.example .env
+   ```
+Then update the environment variables
+
+Build the Docker Images
+
+   ```bash
+   docker-compose build
+   ```
+
+Start the services
+
+   ```bash
+   docker-compose up -d
+   ```
+
+Once the services are up and running, you can access the application at the specified port. For example, if your application is running on port 8000
+Open a web browser and go to http://localhost:8000/docs to see the OpenAPI Swagger docs.
+
+
+3. Make POST requests to the `/v1/chat/completions` endpoint to generate text. You can use the following JSON format for your requests:
 
    ```json
    {
