@@ -23,6 +23,8 @@ services:
     runtime: nvidia
     volumes:
       - ${VOLUME}:/data
+    ports:
+      - "8080:8080"
     devices:
       - /dev/nvidia0  # If you have GPU(s), adjust this according to your setup
     deploy:

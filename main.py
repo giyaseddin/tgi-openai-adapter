@@ -33,6 +33,7 @@ app.add_middleware(
 
 # Environment variable for API key
 API_KEY = os.environ.get("OPENAI_API_KEY")
+TGI_URL = os.environ.get("TGI_URL")
 
 security = HTTPBearer()
 
@@ -45,7 +46,7 @@ def get_current_api_key(authorization: HTTPAuthorizationCredentials = Depends(se
     return token
 
 
-adapter = TGIAdapter("http://localhost:8080")
+adapter = TGIAdapter(TGI_URL)
 
 
 def stream_data(request: OpenAIRequest) -> Generator[str, None, None]:
