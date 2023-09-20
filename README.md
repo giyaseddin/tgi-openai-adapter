@@ -1,16 +1,22 @@
 # OpenAI-like Text Generation Inference (TGI) served with FastAPI
 
-This project provides a FastAPI-based endpoint for text generation using a text generation adapter. It allows you to generate multiple text responses for a list of prompts using different text generation models.
+This project provides a FastAPI-based replica for text generation using HuggingFace 🤗 text generation like OpenAI.
+
+It allows you to generate stream text responses for your messages and serve a model of your choice.
+
 
 ## Getting Started
 
 These instructions will help you set up and run the FastAPI application for text generation.
 
+Let's make it possible to use [text-generation-inference](https://github.com/huggingface/text-generation-inference) just like [OpenAI](https://platform.openai.com/docs/api-reference/chat/create)
+
+
 ### Prerequisites
 
 - Python 3.7+
 - FastAPI
-- Your text generation adapter
+- Text generation inference
 
 ### Installation
 
@@ -24,10 +30,10 @@ These instructions will help you set up and run the FastAPI application for text
 2. Install dependencies:
 
    ```bash
-   pip install fastapi
+   pip install -r requirements.txt
    ```
 
-3. Replace `your_adapter_module` and `AdapterClass` with the actual module and class you're using for text generation.
+3. Replace OpenAI's `base_url` with your deployed URL and start using for text generation. 🚀
 
 ### Usage
 
@@ -55,7 +61,7 @@ These instructions will help you set up and run the FastAPI application for text
       "stream": true
     }
    ```
-   
+
 following the [docs of OpenAI](https://platform.openai.com/docs/api-reference/chat/create)
 
    - `models`: A list of text generation model names.
@@ -86,6 +92,15 @@ data: [DONE]
 ### Customization
 
 - You can customize the `generate_text` method inside the FastAPI endpoint to adapt it to your specific text generation needs.
+
+
+
+## Next up:
+* Add regular chat completion
+* Implement embedding endpoint
+* Implement memory management (With RAG optional)
+* Got identical? let's develop even more fun stuff 😉 
+
 
 ## License
 
