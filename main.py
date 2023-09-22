@@ -8,7 +8,7 @@ import logging
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 
 from tgi_adapter import TGIAdapter, OpenAIRequest
 
@@ -60,10 +60,13 @@ def stream_data(request: OpenAIRequest) -> Generator[str, None, None]:
 
 @app.post("/v1/chat/completions", description="This endpoint mimics OpenAI's chat completions API.")
 async def generate_text(request: OpenAIRequest, api_key: str = Depends(get_current_api_key)):
-    if not request.stream:
-        raise HTTPException(status_code=400, detail="Only streaming is supported.")
     try:
-        return StreamingResponse(stream_data(request), media_type="text/event-stream")
+        if request.stream:
+            return StreamingResponse(stream_data(request), media_type="text/event-stream")
+        else:
+            response_data = adapter.process_request(request)
+            return JSONResponse(content=response_data, status_code=200, media_type="application/json")
+
     except ValueError as ve:
         logging.error(f"Validation Error: {ve}")
         raise HTTPException(status_code=400, detail=str(ve))
