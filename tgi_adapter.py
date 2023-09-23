@@ -24,11 +24,11 @@ class OpenAIRequest(BaseModel):
     messages: List[Message]
     stream: Optional[bool] = False
     temperature: Optional[Union[float, None]] = 1.0
-    top_p: Optional[Union[float, None]] = 1.0
+    top_p: Optional[Union[float, None]] = None
     n: Optional[Union[int, None]] = 1
     stop: Optional[Union[str, List[str], None]] = None
     max_tokens: Optional[Union[int, None]] = 100
-    presence_penalty: Optional[Union[float, None]] = 0.0
+    presence_penalty: Optional[Union[float, None]] = None
     frequency_penalty: Optional[Union[float, None]] = 0.0
     logit_bias: Optional[Dict[int, float]] = None
     user: Optional[str] = None
@@ -115,7 +115,6 @@ class TGIAdapter:
 
     def tgi_to_openai_response(self, tgi_response: TextGenerationResponse, unique_id, timestamp, prompt_tokens_len):
         token_text = tgi_response.generated_text
-        print(tgi_response)
         response = {
             "id": unique_id,
             "object": "chat.completion",
@@ -146,7 +145,11 @@ class TGIAdapter:
         tgi_response = self.client.text_generation(
             tgi_prompt,
             max_new_tokens=openai_request.max_tokens,
-            details=True
+            temperature=openai_request.temperature,
+            repetition_penalty=openai_request.presence_penalty,
+            top_p=openai_request.top_p,
+            stop_sequences=openai_request.stop,
+            details=True,
         )
 
         # Convert the TGI response to the OpenAI format
@@ -159,7 +162,6 @@ class TGIAdapter:
 
     def tgi_to_openai_response_chunk(self, tgi_response: TextGenerationStreamResponse, unique_id, timestamp):
         token_text = tgi_response.token.text
-        print(tgi_response.details)
         chunk = {
             "id": unique_id,
             "object": "chat.completion.chunk",
@@ -182,6 +184,13 @@ class TGIAdapter:
 
         # Call the TGI API with streaming
         for tgi_response in self.client.text_generation(
-                tgi_prompt, max_new_tokens=openai_request.max_tokens, details=True, stream=True
+                tgi_prompt,
+                max_new_tokens=openai_request.max_tokens,
+                temperature=openai_request.temperature,
+                repetition_penalty=openai_request.presence_penalty,
+                top_p=openai_request.top_p,
+                stop_sequences=openai_request.stop,
+                details=True,
+                stream=True,
         ):
             yield self.tgi_to_openai_response_chunk(tgi_response, unique_id, timestamp)
