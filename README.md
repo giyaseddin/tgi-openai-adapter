@@ -131,8 +131,6 @@ data: [DONE]
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
-Certainly! If your project is using the Apache License 2.0, you can update the "License" section in the README accordingly:
-
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE) - see the [LICENSE](LICENSE) file for details.
